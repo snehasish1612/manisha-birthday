@@ -66,10 +66,10 @@ btn.addEventListener("click", () => {
   }
 });
 
-// Surprise button triggers a short confetti burst
+// Surprise button triggers confetti burst and balloon release
 const surpriseBtn = document.getElementById('surpriseBtn');
 surpriseBtn && surpriseBtn.addEventListener('click', () => {
-  // add temporary burst pieces
+  // Add temporary confetti burst
   const extras = 120;
   for (let i = 0; i < extras; i++) {
     confettiPieces.push({
@@ -81,10 +81,36 @@ surpriseBtn && surpriseBtn.addEventListener('click', () => {
       speed: 1.6
     });
   }
-  // remove the extras after a short while
   setTimeout(() => {
     confettiPieces.splice(confettiPieces.length - extras, extras);
   }, 4200);
+
+  // Trigger balloon animations from all sides
+  const leftBalloons = document.querySelectorAll('.surprise-balloons-left .surprise-balloon');
+  const rightBalloons = document.querySelectorAll('.surprise-balloons-right .surprise-balloon');
+  const bottomBalloons = document.querySelectorAll('.surprise-balloons-bottom .surprise-balloon');
+
+  const animateBalloons = (balloons, delay = 0) => {
+    balloons.forEach((balloon, i) => {
+      balloon.classList.remove('float-up');
+      void balloon.offsetWidth;
+      setTimeout(() => {
+        balloon.classList.add('float-up');
+      }, delay + i * 120); // Slightly longer stagger between balloons
+    });
+  };
+
+  // Start animations with slight delays between groups
+  animateBalloons(leftBalloons);
+  animateBalloons(rightBalloons, 200);
+  animateBalloons(bottomBalloons, 400);
+  
+  // Reset all balloons after animation
+  setTimeout(() => {
+    [...leftBalloons, ...rightBalloons, ...bottomBalloons].forEach(balloon => {
+      balloon.classList.remove('float-up');
+    });
+  }, 5000);
 });
 
 // Lightbox for gallery images
